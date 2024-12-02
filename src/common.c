@@ -1,6 +1,68 @@
 #include <windows.h>
 #include <common.h>
  
+D_SEC( B ) ULONG HashString(
+    _In_ PVOID  String,
+    _In_ SIZE_T Length
+) {
+    ULONG  Hash  = 5576;
+    PUCHAR Ptr  = { 0 };
+    UCHAR  Char = { 0 };
+
+    if ( ! String ) {
+        return 0;
+    }
+
+    Ptr  = ( ( PUCHAR ) String );
+
+    do {
+        Char = *Ptr;
+
+        if ( ! Length ) {
+            if ( ! *Ptr ) break;
+        } else {
+            if ( U_PTR( Ptr - U_PTR( String ) ) >= Length ) break;
+            if ( !*Ptr ) ++Ptr;
+        }
+
+        if ( Char >= 'a' ) {
+            Char -= 0x20;
+        }
+
+        Hash = ( ( Hash << 5 ) + Hash ) + Char;
+
+        ++Ptr;
+    } while ( TRUE );
+
+    return Hash;
+}
+
+D_SEC( B ) SIZE_T WCharStringToCharString(_Inout_ PCHAR Destination, _In_ PWCHAR Source, _In_ SIZE_T MaximumAllowed)
+{
+	INT Length = (INT)MaximumAllowed;
+
+	while (--Length >= 0)
+	{
+#pragma warning( push )
+#pragma warning( disable : 4244)
+		if (!(*Destination++ = *Source++))
+			return MaximumAllowed - Length - 1;
+#pragma warning( pop ) 
+	}
+
+	return MaximumAllowed - Length;
+}
+
+D_SEC( B ) void toUpperCaseChar(char* str) 
+{
+    while (*str) {
+        if (*str >= 'a' && *str <= 'z') {
+            *str = *str - ('a' - 'A');
+        }
+        str++;
+    }
+}
+
 D_SEC( B ) int StringCompareW( _In_ const WCHAR *s1, _In_ const WCHAR *s2 ) {
     while (*s1 && *s2 && *s1 == *s2) {
         ++s1;

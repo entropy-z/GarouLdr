@@ -9,7 +9,6 @@
 #define DLL_QUERY_HMODULE 6
 
 typedef struct _GAROU_API {
-	D_API( LoadLibraryA );
 	D_API( LdrLoadDll );
 	D_API( NtProtectVirtualMemory );
 	D_API( NtFlushInstructionCache );

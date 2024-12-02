@@ -1,9 +1,9 @@
 MAKEFLAGS += -s
 
-GCC 	= x86_64-w64-mingw32-gcc
+GPP 	= x86_64-w64-mingw32-g++
 NASM    = nasm
 
-INC		= -I Include
+INC		= -I include
 SRC     = $(wildcard src/*.c)
 
 CFLAGS =  -Os -fno-asynchronous-unwind-tables -nostdlib
@@ -17,8 +17,7 @@ OUT		= -o bin/GarouLdr.x64.dll
 
 rdll:
 	nasm -f win64 src/asm/garou.s -o bin/garou.o
-	$(GCC) $(INC) $(CFLAGS) $(SRC) bin/*.o $(OUT)
+	$(GPP) $(INC) $(CFLAGS) $(SRC) bin/*.o $(OUT)
+	python3 ./scripts/extract.py ./bin/GarouLdr.x64.dll ./bin/GarouLdr.x64.bin
 	rm bin/*.o
 
-hasher:
-	x86_64-w64-mingw32-gcc -w -s .\scripts\Hasher.c -o .\scripts\Hasher.exe
